@@ -74,15 +74,6 @@ function ding_item_viewer_create_field() {
 }
 
 /**
- * Enable required modules.
- */
-function _ding_item_viewer_enable_modules() {
-  if (!module_exists('ding_entity_buttons_settings')) {
-    module_enable(array('ding_entity_buttons_settings'), TRUE);
-  }
-}
-
-/**
  * Fix fields.
  */
 function ding_item_viewer_update_7002() {

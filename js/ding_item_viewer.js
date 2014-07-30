@@ -6,7 +6,7 @@
     items = [],// Items received from server.
     current_tab = 0,
     starting_item = 0,
-    wait_time = 1000; // Time interval when to try to fetch data in ms.
+    wait_time = 5000; // Time interval when to try to fetch data in ms.
 
   $(document).ready(function(){
     // Load data from server.
@@ -28,7 +28,7 @@
     if (response.status === 'BUSY') {
       setTimeout(fetch_data, wait_time);
       // Increase interval between retries. Reduce server load.
-      wait_time *= 1.5;
+      wait_time += 500;
     }
     else if (response.status === 'OK') {
       container.html(response.data.content);
@@ -50,10 +50,10 @@
   function prepare_data() {
     var tab, i, id, ids = [];
     // Build index => object_id mapping for quick access (DingItemViewer.tabs).
-    for(tab = 0; tab < items.length; tab++) {
+    for (tab = 0; tab < items.length; tab++) {
       tabs[tab] = [];
       i = 0;
-      for(id in items[tab]) {
+      for (id in items[tab]) {
         tabs[tab][i] = id;
         i++;
         ids.push(id);
@@ -61,11 +61,18 @@
     }
     // Get settings.
     settings = Drupal.settings.ding_item_viewer;
-
-    // Get reservation buttons.
-    if (typeof(DingAvailability.process) !== 'undefined') {
-      DingAvailability.process('availability', ids, function(){});
-    }
+    var path = Drupal.settings.basePath + 'ding_availability/items/' + ids.join(',');
+    $.ajax({
+      dataType: "json",
+      url: path,
+      success: function(data) {
+        $.each(data, function(id, item) {
+          // Update cache.
+          Drupal.DADB[id] = item;
+        });
+        show_reservation_button();
+      }
+    });
 
     // Get item container.
     content = container.find('.browsebar-items-wrapper');
@@ -95,16 +102,6 @@
       if (i === big_item_positon) {
         item = $(items[current_tab][id].big);
         item.addClass('active');
-
-        // Show reservation button. Dirty hack.
-        if (typeof(DingAvailability.availability_cache[id]) !== 'undefined') {
-          var reservation = item.find('.reservation-link-ajax');
-          if (reservation) {
-            if (DingAvailability.availability_cache[id].show_reservation_button) {
-              reservation.removeClass('hidden');
-            }
-          }
-        }
       }
       // "Small" items.
       else {
@@ -130,6 +127,8 @@
       content.append(item);
     }
 
+    show_reservation_button();
+
     // Preload images for current tab.
     for (i = 0; i < tabs[current_tab].length; i++) {
       id = tabs[current_tab][i];
@@ -141,15 +140,35 @@
     content.find(':last').addClass('last');
 
     var ajax_ele = content.find('.use-ajax');
-    new Drupal.ajax('.' + ajax_ele.parent().attr('id'), ajax_ele, {
-      url: ajax_ele.attr('href'),
-      effect: 'fade',
-      settings: {},
-      progress: {
-        type: 'throbber'
-      },
-      event: 'click tap'
+    ajax_ele.each(function() {
+      ele = $(this);
+      new Drupal.ajax('#' + ele.attr('id'), ele, {
+        url: ele.attr('href'),
+        effect: 'fade',
+        settings: {},
+        progress: {
+          type: 'throbber'
+        },
+        event: 'click tap'
+      });
     });
+
+  }
+
+  /**
+   * Display the reservation button for items that can be reserved.
+   */
+  function show_reservation_button() {
+    // Show reservation button.
+    var r_button = container.find('.reserve-button');
+    if (r_button.length > 0) {
+      var id = r_button.attr('id').match(/reservation-[0-9]+-[\w]+:(\w+)/);
+      if (typeof id[1] !== 'undefined' && typeof Drupal.DADB[id[1]] !== 'undefined') {
+        if (Drupal.DADB[id[1]].reservable === true) {
+          r_button.show();
+        }
+      }
+    }
   }
 
   /**
