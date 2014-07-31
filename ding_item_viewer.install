@@ -26,7 +26,6 @@ function ding_item_viewer_install() {
 function ding_item_viewer_update_7001() {
   field_cache_clear();
   ding_item_viewer_create_field();
-  _ding_item_viewer_enable_modules();
 }
 
 function ding_item_viewer_create_field() {
