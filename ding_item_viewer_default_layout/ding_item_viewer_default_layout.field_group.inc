@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * ding_item_viewer.field_group.inc
+ * ding_item_viewer_default_layout.field_group.inc
  */
 
 /**
  * Implements hook_field_group_info().
  */
-function ding_item_viewer_field_group_info() {
+function ding_item_viewer_default_layout_field_group_info() {
   $export = array();
 
   $field_group = new stdClass();
@@ -23,10 +23,10 @@ function ding_item_viewer_field_group_info() {
     'label' => 'Data',
     'weight' => '2',
     'children' => array(
-      0 => 'ting_abstract',
-      1 => 'ting_author',
-      2 => 'ting_subjects',
-      3 => 'ding_entity_buttons',
+      0 => 'ding_entity_buttons',
+      1 => 'ting_abstract',
+      2 => 'ting_author',
+      3 => 'ting_subjects',
       4 => 'more_info',
     ),
     'format_type' => 'div',
@@ -38,7 +38,7 @@ function ding_item_viewer_field_group_info() {
         'show_label' => '0',
         'label_element' => 'h3',
         'effect' => 'none',
-        'speed' => 'none',
+        'speed' => 'fast',
       ),
       'formatter' => 'open',
     ),
