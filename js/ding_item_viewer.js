@@ -6,14 +6,39 @@
     items = [],// Items received from server.
     current_tab = 0,
     starting_item = 0,
-    wait_time = 5000; // Time interval when to try to fetch data in ms.
+    wait_time = 5000, // Time interval when to try to fetch data in ms.
+    timeOut = null;
+
 
   $(document).ready(function(){
     // Load data from server.
     container = $('.ding-item-viewer');
-    $('a.tab', container).live('click', tab_change);
+    //Begin slide
+    timeOut = setTimeout(slide, settings.interval);
+    // $('a.tab', container).live('click', tab_change);
+    $('a.tab', container).live('click', function(e){
+      // In case when user click to tab, stop sliding.
+      clearTimeout(timeOut);
+      tab_change(e, $(this));
+      // And begin again.
+      timeOut = setTimeout(slide, settings.interval);
+    });
     fetch_data();
   });
+
+  /**
+   * Slides ding item viewer.
+   */
+  function slide() {
+    var tabs = $('li', container);
+    if (tabs.length > 1) {
+      var current = $('li.active a.tab', container);
+      var next = $(current).parent().next();
+      next = next.length > 0 ? next : $(current).parent().siblings().first();
+      tab_change(null, next.children());
+      timeOut = setTimeout(slide, interval);
+    }
+  }
 
   function fetch_data() {
     $.get(container.data('url'), container_callback);
@@ -205,15 +230,17 @@
    *
    * Changes shown tab.
    */
-  function tab_change(e) {
-    e.preventDefault();
+  function tab_change(e, obj) {
+    if(e !== null) {
+      e.preventDefault();
+    }
 
-    starting_item = 0;
-    current_tab = $(this).data('tab');
-    container.find('.ui-tabs-nav li').removeClass('active');
-    $(this).parent().addClass('active');
+      starting_item = 0;
+      current_tab = $(obj).data('tab');
+      container.find('.ui-tabs-nav li').removeClass('active');
+      $(obj).parent().addClass('active');
 
-    show_items();
+      show_items();
   }
 
   function preload_images(item) {
