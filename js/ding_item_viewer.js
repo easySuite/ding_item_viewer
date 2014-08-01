@@ -15,7 +15,6 @@
     container = $('.ding-item-viewer');
     //Begin slide
     timeOut = setTimeout(slide, settings.interval);
-    // $('a.tab', container).live('click', tab_change);
     $('a.tab', container).live('click', function(e){
       // In case when user click to tab, stop sliding.
       clearTimeout(timeOut);
@@ -36,7 +35,7 @@
       var next = $(current).parent().next();
       next = next.length > 0 ? next : $(current).parent().siblings().first();
       tab_change(null, next.children());
-      timeOut = setTimeout(slide, interval);
+      timeOut = setTimeout(slide, settings.interval);
     }
   }
 
