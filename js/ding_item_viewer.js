@@ -13,9 +13,9 @@
   $(document).ready(function(){
     // Load data from server.
     container = $('.ding-item-viewer');
-    //Begin slide
+    // Begin slide.
     timeOut = setTimeout(slide, settings.interval);
-    $('a.tab', container).live('click', function(e){
+    $('a.tab', container).live('click', function(e) {
       // In case when user click to tab, stop sliding.
       clearTimeout(timeOut);
       tab_change(e, $(this));
@@ -234,12 +234,12 @@
       e.preventDefault();
     }
 
-      starting_item = 0;
-      current_tab = $(obj).data('tab');
-      container.find('.ui-tabs-nav li').removeClass('active');
-      $(obj).parent().addClass('active');
+    starting_item = 0;
+    current_tab = $(obj).data('tab');
+    container.find('.ui-tabs-nav li').removeClass('active');
+    $(obj).parent().addClass('active');
 
-      show_items();
+    show_items();
   }
 
   function preload_images(item) {
