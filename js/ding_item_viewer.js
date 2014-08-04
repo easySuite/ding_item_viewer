@@ -14,13 +14,13 @@
     // Load data from server.
     container = $('.ding-item-viewer');
     // Begin slide.
-    timeOut = setTimeout(slide, Drupal.settings.interval);
+    timeOut = setTimeout(slide, Drupal.settings.ding_item_viewer.interval);
     $('a.tab', container).live('click', function(e) {
       // In case when user click to tab, stop sliding.
       clearTimeout(timeOut);
       tab_change(e, $(this));
       // And begin again.
-      timeOut = setTimeout(slide, Drupal.settings.interval);
+      timeOut = setTimeout(slide, Drupal.settings.ding_item_viewer.interval);
     });
     fetch_data();
   });
@@ -35,7 +35,7 @@
       var next = $(current).parent().next();
       next = next.length > 0 ? next : $(current).parent().siblings().first();
       tab_change(null, next.children());
-      timeOut = setTimeout(slide, Drupal.settings.interval);
+      timeOut = setTimeout(slide, Drupal.settings.ding_item_viewer.interval);
     }
   }
 
