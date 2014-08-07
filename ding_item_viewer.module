@@ -146,7 +146,7 @@ function ding_item_viewer_block_view($delta) {
         'ding_item_viewer' => array(
           'visible_items' => 6,
           'big_item_positon' => 3,
-          'interval' => variable_get('ding_item_viewer_interval', 5000),
+          'interval' => variable_get('ding_item_viewer_interval', 5),
         ),
       );
       drupal_add_js($js_setting, 'setting');

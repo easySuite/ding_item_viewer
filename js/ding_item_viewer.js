@@ -7,20 +7,21 @@
     current_tab = 0,
     starting_item = 0,
     wait_time = 5000, // Time interval when to try to fetch data in ms.
-    timeOut = null;
+    timeOut = null,
+    interval = 5000;
 
 
   $(document).ready(function(){
+    // Convert seconds to miliseconds.
+    interval = Drupal.settings.ding_item_viewer.interval * 1000;
     // Load data from server.
     container = $('.ding-item-viewer');
-    // Begin slide.
-    timeOut = setTimeout(slide, Drupal.settings.ding_item_viewer.interval);
     $('a.tab', container).live('click', function(e) {
       // In case when user click to tab, stop sliding.
       clearTimeout(timeOut);
       tab_change(e, $(this));
       // And begin again.
-      timeOut = setTimeout(slide, Drupal.settings.ding_item_viewer.interval);
+      timeOut = setTimeout(slide, interval);
     });
     fetch_data();
   });
@@ -35,7 +36,7 @@
       var next = $(current).parent().next();
       next = next.length > 0 ? next : $(current).parent().siblings().first();
       tab_change(null, next.children());
-      timeOut = setTimeout(slide, Drupal.settings.ding_item_viewer.interval);
+      timeOut = setTimeout(slide, interval);
     }
   }
 
@@ -62,6 +63,8 @@
 
       prepare_data();
       show_items();
+      // Begin slide.
+      timeOut = setTimeout(slide, interval);
     }
     else {
       container.html(response.error);
