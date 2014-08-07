@@ -155,8 +155,8 @@ function ding_item_viewer_admin_form($form, &$form_state) {
   $form['browsebar']['ding_item_viewer_interval'] = array(
     '#type' => 'textfield',
     '#title' => t('Slide interval'),
-    '#default_value' => variable_get('ding_item_viewer_interval', 5000),
-    '#description' => t('The interval between sliding in milliseconds.'),
+    '#default_value' => variable_get('ding_item_viewer_interval', 5),
+    '#description' => t('The interval between sliding in seconds.'),
     '#required' => TRUE,
   );
 
