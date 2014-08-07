@@ -13,8 +13,6 @@
   $(document).ready(function(){
     // Load data from server.
     container = $('.ding-item-viewer');
-    // Begin slide.
-    timeOut = setTimeout(slide, Drupal.settings.ding_item_viewer.interval);
     $('a.tab', container).live('click', function(e) {
       // In case when user click to tab, stop sliding.
       clearTimeout(timeOut);
@@ -62,6 +60,8 @@
 
       prepare_data();
       show_items();
+      // Begin slide.
+      timeOut = setTimeout(slide, Drupal.settings.ding_item_viewer.interval);
     }
     else {
       container.html(response.error);
