@@ -152,6 +152,14 @@ function ding_item_viewer_admin_form($form, &$form_state) {
     '#default_value' => variable_get('ding_item_viewer_cache_ttl', 1),
   );
 
+  $form['browsebar']['ding_item_viewer_interval'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Slide interval'),
+    '#default_value' => variable_get('ding_item_viewer_interval', 5),
+    '#description' => t('The interval between sliding in seconds.'),
+    '#required' => TRUE,
+  );
+
   // Wrap the form, due to draggable items renewal.
   $form['#prefix'] = '<div id="ting-search-browsebar-queries">';
   $form['#suffix'] = '</div>';
