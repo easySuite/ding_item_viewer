@@ -23,6 +23,15 @@
       // And begin again.
       timeOut = setTimeout(slide, interval);
     });
+
+    $('div.browsebar-inner', container).live('mouseover', function() {
+      clearTimeout(timeOut);
+    });
+
+    $('div.browsebar-inner', container).live('mouseout', function() {
+      timeOut = setTimeout(slide, interval);
+    });
+
     fetch_data();
   });
 
