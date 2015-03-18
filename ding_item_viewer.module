@@ -356,14 +356,6 @@ function ding_item_viewer_field_formatter_info() {
     ),
   );
 
-  $formatters['ting_object_more_info_default'] = array(
-    'label' => t('Default'),
-    'description' => t('Link to Ting object'),
-    'field types' => array(
-      'ting_object_more_info',
-    ),
-  );
-
   $formatters['ting_cover_ding_item_viewer'] = array(
     'label' => t('Ding item viewer'),
     'description' => t('Cover image without ajax'),
@@ -538,13 +530,6 @@ function ding_item_viewer_field_formatter_view($entity_type, $entity, $field, $i
         $element[$delta] = array('#markup' => $output);
         break;
 
-      case 'ting_object_more_info_default':
-        $link = l(t('More info'), 'ting/object/' . $entity->ding_entity_id);
-        $element[$delta] = array(
-          '#markup' => $link,
-        );
-        break;
-
       case 'ting_cover_ding_item_viewer':
         module_load_include('inc', 'ting_covers', 'ting_covers.pages');
         list($owner_id, $local_id) = explode(':', $entity->ding_entity_id);
@@ -569,21 +554,6 @@ function ding_item_viewer_field_formatter_view($entity_type, $entity, $field, $i
   }
 
   return $element;
-}
-
-/**
- * Implements hook_field_info().
- */
-function ding_item_viewer_field_info() {
-  return array(
-    'ting_object_more_info' => array(
-      'label' => t('More info link'),
-      'description' => t('Link to Ting object'),
-      'default_widget' => 'hidden',
-      'default_formatter' => 'ting_object_more_info_default',
-      'no_ui' => TRUE,
-    ),
-  );
 }
 
 /**

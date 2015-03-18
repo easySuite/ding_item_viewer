@@ -1,10 +1,11 @@
 name = Ding Item Viewer
-description = Display ting objects in a carousel view
+description = Display ting objects in a carousel view.
 core = 7.x
 package = easyDDB
 version = 7.x-1.0.1
 project = ding_item_viewer
 dependencies[] = ding_item_cache
+dependencies[] = ding_more_info
 dependencies[] = image
 configure = admin/config/ding/item_viewer
 features[features_api][] = api:1
