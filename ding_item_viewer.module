@@ -669,7 +669,7 @@ function ding_item_viewer_build_data() {
  */
 function ding_item_viewer_flush_caches() {
   // Remove local lock variable.
-  variable_delete(DING_ITEM_VIEWER_RESULT);
+  variable_del(DING_ITEM_VIEWER_RESULT);
 }
 
 /**
