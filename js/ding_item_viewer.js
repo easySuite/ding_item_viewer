@@ -148,7 +148,7 @@
         }
         else {
           item.addClass('odd');
-        }
+        }		
         // Position on screen (helper info).
         item.data('position', i);
 
@@ -160,6 +160,7 @@
       // Show item.
       item.addClass('browsebar-item');
 
+      item.find('img').wrap("<div class='image-wrapper'></div>");
       content.append(item);
     }
 
