@@ -148,7 +148,7 @@
         }
         else {
           item.addClass('odd');
-        }		
+        }
         // Position on screen (helper info).
         item.data('position', i);
 
