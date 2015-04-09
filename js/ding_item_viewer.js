@@ -160,6 +160,7 @@
       // Show item.
       item.addClass('browsebar-item');
 
+      item.find('img').wrap("<div class='image-wrapper'></div>");
       content.append(item);
     }
 
