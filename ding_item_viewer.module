@@ -511,7 +511,7 @@ function ding_item_viewer_field_formatter_view($entity_type, $entity, $field, $i
         if ($subject) {
           $subject = l(
             $subject,
-            'search/ting/dc.subject="' . $subject . '"',
+            'search/ting/term.subject="' . $subject . '"',
             array('attributes' => array('class' => array('subject')))
           );
         }
