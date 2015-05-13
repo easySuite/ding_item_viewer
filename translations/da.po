@@ -141,7 +141,7 @@ msgstr ""
 
 #: ding_item_viewer.module:124;274;326;335;343;351;368;19
 msgid "Ding item viewer"
-msgstr "Materialekarussel"
+msgstr "Materialekarrusel"
 
 #: ding_item_viewer.module:309
 msgid "Ding item viewer (small)"
@@ -215,7 +215,7 @@ msgstr ""
 
 #: ding_item_viewer.module:20
 msgid "Configure ding item viewer"
-msgstr "Indstil Materialekarusellen"
+msgstr "Indstil Materialekarrusellen"
 
 #: ding_item_viewer.module:29
 msgid "Ding item viewer AJAX handler"
