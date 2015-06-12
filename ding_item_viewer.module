@@ -710,4 +710,17 @@ function ding_item_viewer_ajax() {
   drupal_json_output($response);
 }
 
+/**
+ * Implements hook_more_info_support().
+ */
+function ding_item_viewer_more_info_support() {
+  return array(
+    'ding_item_viewer' => array(
+      'weight' => 6,
+      'label' => 'hidden',
+      'display' => 'ding_item_viewer_big',
+    ),
+  );
+}
+
 include_once 'ding_item_viewer.features.inc';

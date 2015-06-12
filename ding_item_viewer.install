@@ -132,17 +132,6 @@ function ding_item_viewer_install() {
   );
   field_update_instance($instance);
 
-  // More info.
-  $instance = field_info_instance('ting_object', 'ting_more_info', 'ting_object');
-  $instance['display']['ding_item_viewer_big'] = array(
-    'label' => 'hidden',
-    'type' => 'ting_more_info_default',
-    'weight' => '6',
-    'settings' => array(),
-    'module' => 'ding_more_info',
-  );
-  field_update_instance($instance);
-
   // Action buttons.
   $instance = field_info_instance('ting_object', 'ding_entity_buttons', 'ting_object');
   $instance['display']['ding_item_viewer_big'] = array(
