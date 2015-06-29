@@ -138,7 +138,7 @@ function ding_item_viewer_block_view($delta) {
     case 'item_viewer':
       // Load required JS and CSS files.
       drupal_add_library('system', 'drupal.ajax');
-      drupal_add_css(drupal_get_path('module', 'ding_item_viewer') . '/css/ding_item_viewer.styles.css');
+      drupal_add_css(drupal_get_path('module', 'ding_item_viewer') . '/css/ding_item_viewer.css');
       drupal_add_js(drupal_get_path('module', 'ding_item_viewer') . '/js/ding_item_viewer.js');
       drupal_add_js(drupal_get_path('module', 'ding_availability') . '/js/ding_availability.js');
 
