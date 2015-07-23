@@ -59,12 +59,7 @@
    * @see jQuery.get()
    */
   function container_callback(response, textStatus, jqXHR) {
-    if (response.status === 'BUSY') {
-      setTimeout(fetch_data, wait_time);
-      // Increase interval between retries. Reduce server load.
-      wait_time += 500;
-    }
-    else if (response.status === 'OK') {
+    if (response.status === 'OK') {
       container.html(response.data.content);
       container.append(response.data.tabs);
       items = response.data.items;
