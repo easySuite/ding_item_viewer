@@ -72,26 +72,23 @@ function ding_item_viewer_batch_generate_content(&$context) {
   $ids = current($context['results']);
   $cid = key($context['results']);
 
-  $cached = cache_get($cid, 'cache_ding_item');
-  if (!$cached) {
-    $objects = ding_entity_load_multiple($ids);
+  $objects = ding_entity_load_multiple($ids);
 
-    $items = array();
-    foreach ($objects as $item) {
-      $build = ting_object_view($item, 'ding_item_viewer_big');
-      $big = drupal_render($build);
-      $build = ting_object_view($item, 'ding_item_viewer_small');
-      $small = drupal_render($build);
+  $items = array();
+  foreach ($objects as $item) {
+    $build = ting_object_view($item, 'ding_item_viewer_big');
+    $big = drupal_render($build);
+    $build = ting_object_view($item, 'ding_item_viewer_small');
+    $small = drupal_render($build);
 
-      $items[$item->localId] = array(
-        'small' => $small,
-        'big' => $big,
-      );
-    }
-
-    // Cache rendered items.
-    cache_set($cid, $items, 'cache_ding_item', REQUEST_TIME + $context['sandbox']['cache_ttl']);
+    $items[$item->localId] = array(
+      'small' => $small,
+      'big' => $big,
+    );
   }
+
+  // Cache rendered items.
+  cache_set($cid, $items, 'cache_ding_item', REQUEST_TIME + $context['sandbox']['cache_ttl']);
 
   if ($context['sandbox']['progress'] < $context['sandbox']['themes']) {
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['themes'];
