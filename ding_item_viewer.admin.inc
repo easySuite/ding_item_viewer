@@ -7,9 +7,6 @@
 
 /**
  * Admin page menu callback.
- *
- * @return
- *   Admin form.
  */
 function ding_item_viewer_admin_page() {
   drupal_add_js(drupal_get_path('module', 'ding_item_viewer') . '/js/ding_item_viewer.admin.js');
@@ -21,14 +18,6 @@ function ding_item_viewer_admin_page() {
 
 /**
  * Search queries admin form.
- *
- * @param $form
- *   Form.
- * @param $form_state
- *   Form state.
- *
- * @return
- *   Form structure.
  */
 function ding_item_viewer_admin_form($form, &$form_state) {
   $searches_num = !empty($form_state['values']['num_searches']) ? $form_state['values']['num_searches'] : 0;
@@ -39,7 +28,7 @@ function ding_item_viewer_admin_form($form, &$form_state) {
   if (isset($form_state['clicked_button'])) {
     $clicked_btn = $form_state['clicked_button']['#name'];
 
-    // Get a clicked 'remove' button
+    // Get a clicked 'remove' button.
     foreach ($form_state['buttons'] as $k => $v) {
       if ($v['#name'] == $clicked_btn) {
         if (preg_match('/edit-remove/', $v['#id'])) {
@@ -52,9 +41,22 @@ function ding_item_viewer_admin_form($form, &$form_state) {
     }
   }
 
+  // Ajaxified button for new fields.
+  $form['new_search_browsebar_button'] = array(
+    '#type' => 'button',
+    '#value' => t('Add another'),
+    '#name' => 'add_query',
+    '#ajax' => array(
+      'callback' => 'ding_item_viewer_admin_form_ajaxify',
+      'wrapper' => 'ting-search-browsebar-queries',
+      'method' => 'replace',
+      'effect' => 'fade',
+    ),
+  );
+
   $form['browsebar'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Searches',
+    '#title' => t('Settings'),
   );
 
   // Get current saved queries.
@@ -93,7 +95,7 @@ function ding_item_viewer_admin_form($form, &$form_state) {
   // Hide removed fields.
   for ($i = 0; $i < $searches_num + $c; $i++) {
     if (in_array($i, $hidden)) {
-      // Hide title, used to sort needed queries when saving
+      // Hide title, used to sort needed queries when saving.
       $form['browsebar']['ting_searches']['search_' . $i]['title[]']['#value'] = '';
       $form['browsebar']['ting_searches']['search_' . $i]['#prefix'] = '<div class="search-query-hidden">';
       $form['browsebar']['ting_searches']['search_' . $i]['#suffix'] = '</div>';
@@ -106,25 +108,13 @@ function ding_item_viewer_admin_form($form, &$form_state) {
     '#value' => $searches_num,
   );
 
-  // Ajaxified button for new fields.
-  $form['browsebar']['new_search_browsebar_button'] = array(
-    '#type' => 'button',
-    '#value' => t('Add another'),
-    '#name' => 'add_query',
-    '#ajax' => array(
-      'callback' => 'ding_item_viewer_admin_form_ajaxify',
-      'wrapper' => 'ting-search-browsebar-queries',
-      'method' => 'replace',
-      'effect' => 'fade',
-    ),
-  );
-
   $form['browsebar']['ding_item_viewer_item_limit'] = array(
-    '#type' => 'select',
+    '#type' => 'textfield',
     '#title' => t('Item limit'),
-    '#options' => array_combine(range(6, 18, 6), range(6, 18, 6)),
     '#description' => t('The number of items to be returned in search result.'),
     '#default_value' => variable_get('ding_item_viewer_item_limit', 18),
+    '#size' => 3,
+    '#element_validate' => array('element_validate_integer_positive'),
   );
 
   $form['browsebar']['ding_item_viewer_item_sorting'] = array(
@@ -150,6 +140,9 @@ function ding_item_viewer_admin_form($form, &$form_state) {
     '#title' => t('Cache TTL'),
     '#description' => t('How many hours the cache lives.'),
     '#default_value' => variable_get('ding_item_viewer_cache_ttl', 1),
+    '#size' => '3',
+    '#element_validate' => array('element_validate_integer_positive'),
+
   );
 
   $form['browsebar']['ding_item_viewer_interval'] = array(
@@ -157,7 +150,21 @@ function ding_item_viewer_admin_form($form, &$form_state) {
     '#title' => t('Slide interval'),
     '#default_value' => variable_get('ding_item_viewer_interval', 5),
     '#description' => t('The interval between sliding in seconds.'),
+    '#size' => '3',
+    '#element_validate' => array('element_validate_integer_positive'),
     '#required' => TRUE,
+  );
+
+  $form['browsebar']['ding_item_viewer_debug'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Debug'),
+    '#default_value' => variable_get('ding_item_viewer_debug', FALSE),
+    '#description' => t('Log the search process information.'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
   );
 
   // Wrap the form, due to draggable items renewal.
@@ -168,17 +175,11 @@ function ding_item_viewer_admin_form($form, &$form_state) {
   // Custom form submit handler.
   $form['#submit'] = array('ding_item_viewer_search_submit');
 
-  return system_settings_form($form);
+  return $form;
 }
 
 /**
  * AJAX responder for field addition/removal fields.
- *
- * @param $form
- *   Form.
- *
- * @return
- *   Changed field to be updated.
  */
 function ding_item_viewer_admin_form_ajaxify($form, &$form_state) {
   return $form;
@@ -186,12 +187,6 @@ function ding_item_viewer_admin_form_ajaxify($form, &$form_state) {
 
 /**
  * Theme the queries form, mainly adding a table drag-n-drop feature.
- *
- * @param $variables
- *   Theme related variables.
- *
- * @return
- *   Themed form output.
  */
 function theme_ding_item_viewer_admin_form($variables) {
   $form = $variables['form'];
@@ -242,10 +237,10 @@ function theme_ding_item_viewer_admin_form($variables) {
 /**
  * Form part, describing query fields.
  *
- * @param $item
+ * @param array $item
  *   Values for existing query.
  *
- * @return
+ * @return array
  *   Fields structure.
  */
 function ding_item_viewer_query_form($item = array(), $index = 0) {
@@ -309,13 +304,17 @@ function ding_item_viewer_query_form($item = array(), $index = 0) {
 
 /**
  * Submit handler for admin backend queries form.
- *
- * @param $form
- *   Form.
- * @param $form_state
- *   Form state.
  */
 function ding_item_viewer_search_submit($form, &$form_state) {
+  $values = $form_state['values'];
+
+  variable_set('ding_item_viewer_item_limit', $values['ding_item_viewer_item_limit']);
+  variable_set('ding_item_viewer_item_sorting', $values['ding_item_viewer_item_sorting']);
+  variable_set('ding_item_viewer_cache_ttl', $values['ding_item_viewer_cache_ttl']);
+  variable_set('ding_item_viewer_interval', $values['ding_item_viewer_interval']);
+  variable_set('ding_item_viewer_debug', $values['ding_item_viewer_debug']);
+
+
   $c = count($form_state['input']['title']);
   $searches = array();
 
@@ -340,24 +339,32 @@ function ding_item_viewer_search_submit($form, &$form_state) {
   // Clear all item list cache.
   module_invoke('ding_item_cache', 'clear_all');
 
-  // Clear all cache.
-  foreach ($searches as $query) {
-    $cid = ding_item_viewer_generate_cache_id($query['query']);
-    cache_clear_all($cid, 'cache_ding_item');
+  // Start batch operations if there are some themes.
+  if (count($searches) < 1) {
+    return;
   }
-  cache_clear_all(DING_ITEM_VIEWER_RESULT, 'cache_ding_item');
 
-  // Make ting search requests.
-  // browsebar_do_request();
-}
-
-/**
- * Validate settings submission.
- */
-function ding_item_viewer_admin_form_validate($form, &$form_state) {
-  $cache_ttl = $form_state['values']['ding_item_viewer_cache_ttl'];
-
-  if (!is_numeric($cache_ttl)) {
-    form_set_error('ding_item_viewer_cache_ttl', t('Please enter a valid number.'));
+  $operations = array();
+  foreach ($searches as $search) {
+    $batch_settings = array(
+      $search['title'],
+      $search['query'],
+      $values['ding_item_viewer_item_limit'],
+      $values['ding_item_viewer_item_sorting'],
+    );
+    $operations[] = array('ding_item_viewer_batch_process_items', $batch_settings);
   }
+
+  $operations[] = array('ding_item_viewer_batch_generate_content', array());
+
+  $batch = array(
+    'operations' => $operations,
+    'finished' => 'ding_item_viewer_batch_finished',
+    'title' => t('Searching for items...'),
+    'init_message' => t('Initializing...'),
+    'error_message' => t('Themes could not be processed, for details see log.'),
+    'file' => drupal_get_path('module', 'ding_item_viewer') . '/ding_item_viewer.batch.inc',
+  );
+
+  batch_set($batch);
 }
