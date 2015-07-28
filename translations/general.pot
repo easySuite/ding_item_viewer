@@ -3,17 +3,19 @@
 # LANGUAGE translation of Drupal (general)
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 # Generated from files:
-#  ding_item_viewer.admin.inc: n/a
-#  ding_item_viewer.module: n/a
-#  templates/ding_item_viewer.item.tpl.php: n/a
-#  templates/ding_item_viewer.item_active.tpl.php: n/a
-#  ding_item_viewer.info: n/a
+#  profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc: n/a
+#  profiles/ding2/modules/ding_item_viewer/ding_item_viewer.batch.inc: n/a
+#  profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc: n/a
+#  profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module: n/a
+#  profiles/ding2/modules/ding_item_viewer/templates/ding_item_viewer.item.tpl.php: n/a
+#  profiles/ding2/modules/ding_item_viewer/templates/ding_item_viewer.item_active.tpl.php: n/a
+#  profiles/ding2/modules/ding_item_viewer/ding_item_viewer.info: n/a
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-02-19 16:14+0100\n"
+"POT-Creation-Date: 2015-07-28 11:17+0300\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -22,231 +24,267 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ding_item_viewer.admin.inc:112
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:47
 msgid "Add another"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:124
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:59
+msgid "Settings"
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:113
 msgid "Item limit"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:126
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:114
 msgid "The number of items to be returned in search result."
 msgstr ""
 
-#: ding_item_viewer.admin.inc:132
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:122
 msgid "Sorting"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:134
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:124
 msgid "- None -"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:135
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:125
 msgid "Title (Ascending)"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:136
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:126
 msgid "Title (Descending)"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:137
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:127
 msgid "Creator (Ascending)"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:138
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:128
 msgid "Creator (Descending)"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:139
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:129
 msgid "Date (Ascending)"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:140
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:130
 msgid "Date (Descending)"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:141
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:131
 msgid "Acquisition date (Ascending)"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:142
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:132
 msgid "Acquisition date (Descending)"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:145
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:135
 msgid "If not set, defaults to Ranking"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:150
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:140
 msgid "Cache TTL"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:151
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:141
 msgid "How many hours the cache lives."
 msgstr ""
 
-#: ding_item_viewer.admin.inc:157
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:150
 msgid "Slide interval"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:159
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:152
 msgid "The interval between sliding in seconds."
 msgstr ""
 
-#: ding_item_viewer.admin.inc:268
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:160
+msgid "Debug"
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:162
+msgid "Log the search process information."
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:167
+msgid "Save configuration"
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:263
 msgid "Title"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:269
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:264
 msgid "The title of the search is used for the tab in the browsebar. Keep it short."
 msgstr ""
 
-#: ding_item_viewer.admin.inc:276
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:271
 msgid "Description"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:277
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:272
 msgid "The subtitle displayed next to the search results."
 msgstr ""
 
-#: ding_item_viewer.admin.inc:283
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:278
 msgid "Query"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:285
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:280
 msgid "The query to display search results for."
 msgstr ""
 
-#: ding_item_viewer.admin.inc:291
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:286
 msgid "Remove"
 msgstr ""
 
-#: ding_item_viewer.admin.inc:361
-msgid "Please enter a valid number."
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:363
+msgid "Searching for items..."
 msgstr ""
 
-#: ding_item_viewer.module:52
-msgid "Manage ding item viewer"
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:364
+msgid "Initializing..."
 msgstr ""
 
-#: ding_item_viewer.module:53
-msgid "Configure ding item viewer settings such as search query and cache time."
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.admin.inc:365
+msgid "Themes could not be processed, for details see log."
 msgstr ""
 
-#: ding_item_viewer.module:79
-msgid "Loading"
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.batch.inc:31
+msgid "Now processing theme %title.<br />Items found: %num / %max"
 msgstr ""
 
-#: ding_item_viewer.module:124;274;326;335;343;351;368;19
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.batch.inc:70
+msgid "Building themes content: %num / %max"
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.batch.inc:106
+msgid "Completed fetching items."
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.batch.inc:109
+msgid "Failed to load items. Restart the job with <em>Debug</em> enabled and consult the logs."
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.batch.inc:40
+msgid "item_viewer"
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.batch.inc:40
+msgid "Found @n items with covers. Query: @q. Page: @p. Collections: @c."
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:14;23;31;39;48 profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module:122;251;17
 msgid "Ding item viewer"
 msgstr ""
 
-#: ding_item_viewer.module:309
-msgid "Ding item viewer (small)"
-msgstr ""
-
-#: ding_item_viewer.module:313
-msgid "Ding item viewer (big)"
-msgstr ""
-
-#: ding_item_viewer.module:327
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:15
 msgid "Show title (truncates if it is too long)"
 msgstr ""
 
-#: ding_item_viewer.module:336
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:24
 msgid "Show authors as plain text (without links)"
 msgstr ""
 
-#: ding_item_viewer.module:344
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:32
 msgid "Show one subject"
 msgstr ""
 
-#: ding_item_viewer.module:352
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:40
 msgid "Show trimmed abstract"
 msgstr ""
 
-#: ding_item_viewer.module:360
-msgid "Default"
-msgstr ""
-
-#: ding_item_viewer.module:361;581
-msgid "Link to Ting object"
-msgstr ""
-
-#: ding_item_viewer.module:369
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:49
 msgid "Cover image without ajax"
 msgstr ""
 
-#: ding_item_viewer.module:389
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:69
 msgid "Link title to"
 msgstr ""
 
-#: ding_item_viewer.module:391
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:71
 msgid "Don't link"
 msgstr ""
 
-#: ding_item_viewer.module:392
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:72
 msgid "Object"
 msgstr ""
 
-#: ding_item_viewer.module:393
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:73
 msgid "Collection, if part of a collection"
 msgstr ""
 
-#: ding_item_viewer.module:401;437
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:81;117
 msgid "Trim length"
 msgstr ""
 
-#: ding_item_viewer.module:433
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:113
 msgid "Link type: @type"
 msgstr ""
 
-#: ding_item_viewer.module:542;594;595 templates/ding_item_viewer.item.tpl.php:28 templates/ding_item_viewer.item_active.tpl.php:42
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.field.inc:252;253 profiles/ding2/modules/ding_item_viewer/templates/ding_item_viewer.item.tpl.php:28 profiles/ding2/modules/ding_item_viewer/templates/ding_item_viewer.item_active.tpl.php:42
 msgid "More info"
 msgstr ""
 
-#: ding_item_viewer.module:580
-msgid "More info link"
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module:50
+msgid "Manage ding item viewer"
 msgstr ""
 
-#: ding_item_viewer.module:20
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module:51
+msgid "Configure ding item viewer settings such as search query and cache time."
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module:77
+msgid "Loading"
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module:267
+msgid "Ding item viewer (small)"
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module:271
+msgid "Ding item viewer (big)"
+msgstr ""
+
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module:18
 msgid "Configure ding item viewer"
 msgstr ""
 
-#: ding_item_viewer.module:29
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module:27
 msgid "Ding item viewer AJAX handler"
 msgstr ""
 
-#: ding_item_viewer.module:30
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module:28
 msgid "Sends rendered items over AJAX"
 msgstr ""
 
-#: ding_item_viewer.module:36
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.module:34
 msgid "Ding item viewer data AJAX handler"
 msgstr ""
 
-#: ding_item_viewer.info:0
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.info:0
 msgid "Ding Item Viewer"
 msgstr ""
 
-#: ding_item_viewer.info:0
-msgid "Display ting objects in a carousel view"
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.info:0
+msgid "Display ting objects in a carousel view."
 msgstr ""
 
-#: ding_item_viewer.info:0
+#: profiles/ding2/modules/ding_item_viewer/ding_item_viewer.info:0
 msgid "easyDDB"
 msgstr ""
 
-#: templates/ding_item_viewer.item_active.tpl.php:34
+#: profiles/ding2/modules/ding_item_viewer/templates/ding_item_viewer.item_active.tpl.php:34
 msgid "Genre"
 msgstr ""
 
-#: templates/ding_item_viewer.item_active.tpl.php:40
+#: profiles/ding2/modules/ding_item_viewer/templates/ding_item_viewer.item_active.tpl.php:40
 msgid "Reviews"
 msgstr ""
 
-#: templates/ding_item_viewer.item_active.tpl.php:46
+#: profiles/ding2/modules/ding_item_viewer/templates/ding_item_viewer.item_active.tpl.php:46
 msgid "Reserve"
 msgstr ""
 
