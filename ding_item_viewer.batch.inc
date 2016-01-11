@@ -23,7 +23,6 @@ function ding_item_viewer_batch_process_items($title, $query, $limit, $sort, &$c
     $collection_ids = array_keys($search_result->collections);
     $cover_exists = ding_item_viewer_check_covers($collection_ids);
 
-
     $context['sandbox']['items'] = array_merge($context['sandbox']['items'], array_keys($cover_exists));
     $key = ding_item_viewer_generate_cache_id($title . $query);
     $context['results'][$key] = $context['sandbox']['items'];

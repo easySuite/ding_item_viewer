@@ -214,14 +214,13 @@ function ding_item_viewer_search_ting($query = '', $page = 1, $records = 10, $so
   module_load_include('inc', 'ting', 'ting.client');
 
   if (!empty($query)) {
-    $query = '(' . $query . ')';
-
     $options = array(
       'allObjects' => FALSE,
       'enrich' => TRUE,
       'sort' => $sort,
     );
 
+    $query = '(' . _ting_search_quote($query) . ')';
     $search_result = ting_do_search($query, $page, $records, $options);
 
     return $search_result;
