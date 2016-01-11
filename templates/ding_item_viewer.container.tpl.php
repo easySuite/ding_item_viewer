@@ -9,6 +9,7 @@
  */
 ?>
 <div class="ding-item-viewer" data-url="<?php echo $url; ?>">
+  <span class="ding-item-viewer-queries"></span>
   <div class="ding-item-viewer-preloader">
     <?php echo $preload_image; ?>
   </div>

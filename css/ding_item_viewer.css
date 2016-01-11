@@ -210,3 +210,7 @@
   font-size: 80%;
   margin-top: 10px;
 }
+
+.ding-item-viewer-queries {
+  display: none;
+}

@@ -70,7 +70,7 @@ function ding_item_viewer_theme($existing, $type, $theme, $path) {
 
   $hooks['ding_item_viewer_container'] = array(
     'variables' => array(
-      'url' => url('ding_item_viewer'),
+      'url' => NULL,
       'preload_image' => theme_image(
         array(
           'path' => $mod_path . '/img/loader.gif',
@@ -78,6 +78,7 @@ function ding_item_viewer_theme($existing, $type, $theme, $path) {
           'attributes' => array(),
         )
       ),
+      'query_hash' => NULL,
     ),
     'template' => 'templates/ding_item_viewer.container',
   );
@@ -109,7 +110,25 @@ function ding_item_viewer_theme($existing, $type, $theme, $path) {
     'path' => $path . '/templates',
   );
 
+  $hooks['ding_item_viewer'] = array(
+    'variables' => array(
+      'item_viewer' => NULL,
+    ),
+    'template' => 'ding_item_viewer',
+    'path' => '/templates',
+  );
+
   return $hooks;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function ding_item_viewer_ctools_plugin_directory($owner, $plugin_type) {
+  // we'll be nice and limit scandir() calls
+  if ($owner == 'ctools' && $plugin_type == 'content_types') {
+    return 'plugins/content_types';
+  }
 }
 
 /**
@@ -332,12 +351,14 @@ function ding_item_viewer_build_data() {
  * Outputs item viewer markup as a JSON object.
  */
 function ding_item_viewer_ajax() {
+  dump('exit');exit;
   $response = array(
     'status' => 'OK',
     'data' => array(),
     'error' => '',
   );
 
+  dump('hello');exit;
   $result = ding_item_viewer_get_data();
   $response['data'] = $result;
 
