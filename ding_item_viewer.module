@@ -288,25 +288,51 @@ function ding_item_viewer_entity_info_alter(&$entity_info) {
 
 /**
  * Assembles item viewer data.
+ *
+ * @param string $hash.
+ *
+ * @return array.
  */
-function ding_item_viewer_get_data() {
+function ding_item_viewer_get_data($hash) {
   $result = array(
-    'tabs' => ding_item_viewer_build_tabs(),
+    'tabs' => ding_item_viewer_build_tabs($hash),
     'content' => theme('item_viewer_content'),
-    'items' => ding_item_viewer_build_data(),
+    'items' => ding_item_viewer_build_data($hash),
   );
 
   return $result;
 }
 
 /**
+ * Get cached configuration by it's hash.
+ *
+ * @param string $cache_id
+ *
+ * @param string $hash
+ *
+ * @return array|boolean
+ */
+function ding_item_viewer_get_cache_by_hash($cache_id, $hash) {
+  $cache = cache_get($cache_id . $hash);
+
+  if (!empty($cache->data)) {
+    return reset($cache->data);
+  }
+
+  return FALSE;
+}
+
+/**
  * Build tabs for item viewer.
+ *
+ * @param string $hash.
  *
  * @return string
  *   Tabs layout markup.
  */
-function ding_item_viewer_build_tabs() {
-  $queries = variable_get('ding_item_viewer_search_queries');
+function ding_item_viewer_build_tabs($hash) {
+  $cached_setting = ding_item_viewer_get_cache_by_hash(DING_ITEM_VIEWER_CONF_CACHE_ID, $hash);
+  $queries = $cached_setting['searches'];
 
   $tabs = '';
 
@@ -321,9 +347,14 @@ function ding_item_viewer_build_tabs() {
 
 /**
  * Fetches items markup from cache.
+ *
+ * @param string $hash.
+ *
+ * @return array.
  */
-function ding_item_viewer_build_data() {
-  $queries = variable_get('ding_item_viewer_search_queries');
+function ding_item_viewer_build_data($hash) {
+  $cached_setting = ding_item_viewer_get_cache_by_hash(DING_ITEM_VIEWER_CONF_CACHE_ID, $hash);
+  $queries = $cached_setting['searches'];
 
   $result = array();
 
@@ -341,17 +372,18 @@ function ding_item_viewer_build_data() {
 
 /**
  * Outputs item viewer markup as a JSON object.
+ *
+ * @param string $hash
+ *   Ding item viewer hash identifier.
  */
-function ding_item_viewer_ajax() {
-  dump('exit');exit;
+function ding_item_viewer_ajax($hash) {
   $response = array(
     'status' => 'OK',
     'data' => array(),
     'error' => '',
   );
 
-  dump('hello');exit;
-  $result = ding_item_viewer_get_data();
+  $result = ding_item_viewer_get_data($hash);
   $response['data'] = $result;
 
   drupal_json_output($response);

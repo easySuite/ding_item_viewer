@@ -50,7 +50,6 @@
   }
 
   function fetch_data() {
-    console.log(container.data('url'));
     $.get(container.data('url'), container_callback);
   }
 
