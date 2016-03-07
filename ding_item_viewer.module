@@ -675,7 +675,7 @@ function ding_item_viewer_content_type_render($subtype, $conf, $panel_args, $con
     $ding_item_viewer_hash => array(
       'hash' => $ding_item_viewer_hash,
       'searches' => $searches,
-      '$config' => $conf['ding_item_viewer_settings'],
+      'config' => $conf['ding_item_viewer_settings'],
     ),
   );
 
