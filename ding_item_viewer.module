@@ -516,7 +516,7 @@ function ding_item_viewer_content_type_edit_form($form, &$form_state) {
  * @return array
  *   Fields structure.
  */
-function _ding_item_viewer_query_form($item = array(), $index = 0) {
+function _ding_item_viewer_query_form($index, $item = array()) {
   $form = array();
 
   $form['sort'] = array(
@@ -627,7 +627,8 @@ function ding_item_viewer_content_type_edit_form_submit($form, &$form_state) {
   }
 
   foreach ($searches as $search) {
-    $search_result = ding_item_viewer_search_ting($search['query'], 1, 50, $values['ding_item_viewer_item_sorting']);
+    $sort = $settings_values['ding_item_viewer_item_sorting'];
+    $search_result = ding_item_viewer_search_ting($search['query'], 1, 50, $sort);
 
     $count_search_results = $search_result->numTotalCollections;
     if ($count_search_results > 0) {
