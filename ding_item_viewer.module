@@ -57,7 +57,7 @@ function ding_item_viewer_theme($existing, $type, $theme, $path) {
 
   $mod_path = DING_ITEM_VIEWER_MODULE_PATH;
 
-  $hooks['ding_item_viewer_admin_form'] = array(
+  $hooks['ding_item_viewer_queries'] = array(
     'render element' => 'form',
   );
 
@@ -398,13 +398,9 @@ include_once 'ding_item_viewer.features.inc';
  */
 function ding_item_viewer_content_type_edit_form($form, &$form_state) {
   $form['#tree'] = TRUE;
-  if (empty($form_state['num_searches'])) {
-    $form_state['num_searches'] = 0;
-  }
 
-  if ($form_state['conf']['searches']) {
-    $existing_searches = $form_state['conf']['searches'];
-    $form_state['num_searches'] = count($existing_searches) - 1;
+  if (!isset($form_state['num_searches'])) {
+    $form_state['num_searches'] =  $form_state['conf']['searches'] ?  count($form_state['conf']['searches']) - 1 : 0;
   }
 
   $form['ding_item_viewer'] = array(
@@ -412,10 +408,11 @@ function ding_item_viewer_content_type_edit_form($form, &$form_state) {
     '#title' => t('Searches'),
     '#prefix' => '<div id="ding-item-viewer">',
     '#suffix' => '</div>',
+    '#theme' => 'ding_item_viewer_queries',
   );
 
   for ($i = 0; $i <= $form_state['num_searches']; $i++) {
-    $search = ($existing_searches[$i]) ? $existing_searches[$i] : array();
+    $search = ($form_state['conf']['searches'][$i]) ? $form_state['conf']['searches'][$i] : array();
     $form['ding_item_viewer']['ting_searches'][$i] = _ding_item_viewer_query_form($i, $search);
   }
 
@@ -440,7 +437,10 @@ function ding_item_viewer_content_type_edit_form($form, &$form_state) {
   );
 
   foreach ($settings['ding_item_viewer_settings'] as $key => $val) {
-    $settings[$key] = isset($form_state['conf'][$key]) ? $form_state['conf'][$key] : $val;
+    $settings['ding_item_viewer_settings'][$key] =
+      isset($form_state['conf']['ding_item_viewer_settings'][$key])
+        ? $form_state['conf']['ding_item_viewer_settings'][$key]
+        : $val;
   }
 
   $form['ding_item_viewer_settings'] = array(
@@ -452,7 +452,7 @@ function ding_item_viewer_content_type_edit_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Item limit'),
     '#description' => t('The number of items to be returned in search result.'),
-    '#default_value' => $settings['ding_item_viewer_item_limit'],
+    '#default_value' => $settings['ding_item_viewer_settings']['ding_item_viewer_item_limit'],
     '#size' => 3,
     '#element_validate' => array('element_validate_integer_positive'),
   );
@@ -471,7 +471,7 @@ function ding_item_viewer_content_type_edit_form($form, &$form_state) {
       'acquisitionDate_ascending' => t('Acquisition date (Ascending)'),
       'acquisitionDate_descending' => t('Acquisition date (Descending)'),
     ),
-    '#default_value' => $settings['ding_item_viewer_item_sorting'],
+    '#default_value' => $settings['ding_item_viewer_settings']['ding_item_viewer_item_sorting'],
     '#description' => t('If not set, defaults to Ranking'),
   );
 
@@ -479,7 +479,7 @@ function ding_item_viewer_content_type_edit_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Cache TTL'),
     '#description' => t('How many hours the cache lives.'),
-    '#default_value' => $settings['ding_item_viewer_cache_ttl'],
+    '#default_value' => $settings['ding_item_viewer_settings']['ding_item_viewer_cache_ttl'],
     '#size' => '3',
     '#element_validate' => array('element_validate_integer_positive'),
 
@@ -488,7 +488,7 @@ function ding_item_viewer_content_type_edit_form($form, &$form_state) {
   $form['ding_item_viewer_settings']['ding_item_viewer_interval'] = array(
     '#type' => 'textfield',
     '#title' => t('Slide interval'),
-    '#default_value' => $settings['ding_item_viewer_interval'],
+    '#default_value' => $settings['ding_item_viewer_settings']['ding_item_viewer_interval'],
     '#description' => t('The interval between sliding in seconds.'),
     '#size' => '3',
     '#element_validate' => array('element_validate_integer_positive'),
@@ -498,7 +498,7 @@ function ding_item_viewer_content_type_edit_form($form, &$form_state) {
   $form['ding_item_viewer_settings']['ding_item_viewer_debug'] = array(
     '#type' => 'checkbox',
     '#title' => t('Debug'),
-    '#default_value' => $settings['ding_item_viewer_debug'],
+    '#default_value' => $settings['ding_item_viewer_settings']['ding_item_viewer_debug'],
     '#description' => t('Log the search process information.'),
   );
 
@@ -564,6 +564,43 @@ function _ding_item_viewer_query_form($index, $item = array()) {
 }
 
 /**
+ * Custom form theme function.
+ */
+function theme_ding_item_viewer_queries($variables) {
+  $form = $variables['form'];
+  drupal_add_tabledrag('ding-item-viewer-queries', 'order', 'sibling', 'sort');
+
+  $header = array('Searches', '');
+  $rows = array();
+
+  foreach (element_children($form['ting_searches']) as $id) {
+    $form['ting_searches'][$id]['sort']['#attributes']['class'][] = 'sort';
+
+    $sort = $form['ting_searches'][$id]['sort'];
+    unset($form['ting_searches'][$id]['sort']);
+
+
+    $rows[] = array(
+      'data' => array(
+        drupal_render($form['ting_searches'][$id]),
+        drupal_render($sort),
+      ),
+      'class' => array('draggable'),
+    );
+  }
+
+  $output = theme_table(array(
+                          'header' => $header,
+                          'rows' => $rows,
+                          'attributes' => array('id' => 'ding-item-viewer-queries'),
+                        ));
+
+  $output .= drupal_render_children($form);
+
+  return $output;
+}
+
+/**
  * Submit function for adding query in form.
  */
 function _ding_item_viewer_add_query_submit($form, &$form_state) {
@@ -611,6 +648,13 @@ function ding_item_viewer_content_type_edit_form_submit($form, &$form_state) {
     ),
   );
 
+  function cmp_sort($a, $b)  {
+    if ($a['sort'] == $b['sort']) {
+      return 0;
+    }
+    return ($a['sort'] < $b['sort']) ? -1 : 1;
+  }
+  usort($values['ding_item_viewer']['ting_searches'], "cmp_sort");
   $searches = $values['ding_item_viewer']['ting_searches'];
   $form_state['conf']['searches'] = $searches;
 
