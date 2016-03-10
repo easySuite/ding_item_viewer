@@ -579,7 +579,6 @@ function theme_ding_item_viewer_queries($variables) {
     $sort = $form['ting_searches'][$id]['sort'];
     unset($form['ting_searches'][$id]['sort']);
 
-
     $rows[] = array(
       'data' => array(
         drupal_render($form['ting_searches'][$id]),
