@@ -549,17 +549,6 @@ function _ding_item_viewer_query_form($index, $item = array()) {
     '#default_value' => isset($item['query']) ? $item['query'] : '',
   );
 
-  $form['remove'] = array(
-    '#type' => 'submit',
-    '#value' => t('Remove'),
-    '#name' => $index,
-    '#submit' => array('_ding_item_viewer_remove_query_submit'),
-    '#ajax' => array(
-      'callback' => '_ding_item_viewer_remove_query_ajax',
-      'wrapper' => 'ding-item-viewer',
-    ),
-  );
-
   return $form;
 }
 
@@ -615,22 +604,6 @@ function _ding_item_viewer_add_query_ajax($form, $form_state) {
 }
 
 /**
- * Submit function for removing query from form.
- */
-function _ding_item_viewer_remove_query_submit($form, &$form_state) {
-  $form_state['num_searches']--;
-  $form_state['rebuild'] = TRUE;
-}
-
-/**
- * Ajax callback for removing query from form.
- */
-function _ding_item_viewer_remove_query_ajax($form, &$form_state) {
-  unset($form['ding_item_viewer']['ting_searches'][$form_state['clicked_button'][2]]);
-  return $form['ding_item_viewer'];
-}
-
-/**
  * Submit handler for admin backend queries form.
  */
 function ding_item_viewer_content_type_edit_form_submit($form, &$form_state) {
@@ -647,14 +620,25 @@ function ding_item_viewer_content_type_edit_form_submit($form, &$form_state) {
     ),
   );
 
+  // Check if some queries was removed.
+  $searches = array();
+  foreach ($values['ding_item_viewer']['ting_searches'] as $key => $ting_search) {
+    if (!empty($ting_search['query']) && !empty($ting_search['title']) && !empty($ting_search['subtitle'])) {
+      $searches[$key] = $values['ding_item_viewer']['ting_searches'][$key];
+    }
+  }
+
+  // Reset array index.
+  $searches = array_values($searches);
+
   function cmp_sort($a, $b)  {
     if ($a['sort'] == $b['sort']) {
       return 0;
     }
     return ($a['sort'] < $b['sort']) ? -1 : 1;
   }
-  usort($values['ding_item_viewer']['ting_searches'], "cmp_sort");
-  $searches = $values['ding_item_viewer']['ting_searches'];
+  usort($searches, "cmp_sort");
+
   $form_state['conf']['searches'] = $searches;
 
   // Clear all item list cache.
