@@ -20,7 +20,7 @@
   background-image: url("../img/arrows-carousel.png");
   background-position: -1px -1px;
   border-radius: 40px;
-  z-index: 200;
+  z-index: 50;
 }
 .ding-item-viewer .slick-arrow.slick-next {
   background-position: calc(100% + 1px) -1px;
