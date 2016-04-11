@@ -27,8 +27,17 @@
           arrows: true,
           centerMode: true,
           centerPadding: '50px',
-          slidesToShow: 5,
-          slidesToScroll: 1
+          slidesToShow: 6,
+          useTransform: false,
+          slidesToScroll: 1,
+          variableWidth: true,
+
+          responsive: [{
+            breakpoint: 1024,
+            settings: {
+              slidesToShow: 3
+            }
+          }]
         });
 
         // Change small carousel item on big on carousel change.
