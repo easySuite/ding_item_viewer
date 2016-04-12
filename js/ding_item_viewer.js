@@ -1,163 +1,269 @@
 (function ($) {
-  /**
-   * Start the carousel when the document is ready.
-   */
-  $(document).ready(function() {
-    $('.ding-item-viewer').each(function(i, e) {
-      // var autoplay = 1000 * 1000;
-      var autoplay = $(e).attr('ding-item-viewer-autoplay') * 1000;
-      var tabs = $(e).find('ul.ding-item-viewer-list-tabs');
-      var tabs_index = $(tabs).children().length - 1;
-      var index = 0;
+  $(document).ready(function(){
+    $('[id^=ding-item-viewer-]').each(function (index, element) {
+      var container,// Ding Item Viewer container (main div).
+        content, // Ding Item Viewer item container (div with items).
+        settings,// Settings passed via Drupal.settings.
+        tabs = [],// index => object_id mapping.
+        items = [],// Items received from server.
+        current_tab = 0,
+        starting_item = 0,
+        wait_time = 5000, // Time interval when to try to fetch data in ms.
+        timeOut = null,
+        uri = '',
+        interval = 5000;
 
-      // Init carousel on page load and tab change.
-      function show_carousel(index) {
-        var current_tab = '#tab-' + index;
-        var carousel_wrapper = $(e).find(current_tab + ' div.carousel-items');
-
-        $(current_tab).show();
-        $(carousel_wrapper).show();
-
-        // Init carousel
-        $(carousel_wrapper).slick({
-          arrows: true,
-          centerMode: true,
-          centerPadding: '50px',
-          slidesToShow: 6,
-          useTransform: false,
-          slidesToScroll: 1,
-          variableWidth: true,
-
-          responsive: [{
-            breakpoint: 1024,
-            settings: {
-              slidesToShow: 3
-            }
-          }]
-        });
-
-        change_item_size_to_big(index, 0);
-
-        // Change small carousel item on big on carousel change.
-        $(carousel_wrapper).on('beforeChange', function(event, slick, currentSlide, nextSlide) {
-          event.preventDefault();
-          change_next_item_to_big(this, index, currentSlide, nextSlide);
-        });
-      }
-
-      // Hide carousel on tab change.
-      function hide_carousel(index) {
-        var current_tab = '#tab-' + index;
-        var carousel_wrapper = $(e).find(current_tab + ' div.carousel-items');
-        var current_slide = $(carousel_wrapper).slick('slickCurrentSlide');
-
-        reset_item_size(index, current_slide);
-        $(carousel_wrapper).slick('unslick');
-      }
-
-      // Change item size from small to big on carousel init.
-      function change_item_size_to_big(tab_index, slick_slide) {
-        // console.log(slick_slide)
-        var current_tab = '#tab-' + tab_index;
-        var current_item_id = $(current_tab).find('div.carousel-items [data-slick-index=' + slick_slide + ']').attr('carousel-item');
-        var current_item = $(current_tab).find('div.carousel-items  div[carousel-item="' + current_item_id + '"]');
-        var current_item_big = $(current_tab).find('.carousel-items-big [carousel-item="' + current_item_id + '"]');
-        var copy_holder = $(current_tab + ' .ding-item-viewer-small');
-
-        $(copy_holder).empty();
-        $(copy_holder).html($(current_item).html());
-
-        $(current_item).empty();
-        $(copy_holder).hide();
-
-        $(current_item).html($(current_item_big).html());
-      }
-
-      // Change current slide size to small and next slide to big on carousel slide.
-      function change_next_item_to_big(carousel, tab_index, cur_slide, next_slide) {
-        // Replace big slide with small.
-        var current_tab = '#tab-' + tab_index;
-        var current_item_id = $(current_tab).find('div.carousel-items [data-slick-index=' + cur_slide + ']').attr('carousel-item');
-        var current_item = $(current_tab).find('div.carousel-items  div[carousel-item="' + current_item_id + '"]');
-        var copy_holder = $(current_tab + ' .ding-item-viewer-small');
-
-        $(current_item).empty();
-        $(current_item).html($(copy_holder).html());
-        $(current_item).show();
-        $(copy_holder).empty();
-
-        //Replace small slide with big.
-        change_item_size_to_big(tab_index, next_slide);
-      }
-
-      // Reset current item size on tab change.
-      function reset_item_size(tab_index, slick_slide) {
-        // Replace big slide with small.
-        var current_tab = '#tab-' + tab_index;
-        var current_item_id = $(current_tab).find('div.carousel-items [data-slick-index=' + slick_slide + ']').attr('carousel-item');
-        var current_item = $(current_tab).find('div.carousel-items  div[carousel-item="' + current_item_id + '"]');
-        var copy_holder = $(current_tab + ' .ding-item-viewer-small');
-
-        $(current_item).empty();
-        $(current_item).html($(copy_holder).html());
-        $(current_item).show();
-        $(copy_holder).empty();
-      }
-
-      show_carousel(0);
-
-      // Stop tab switching if mouse enters carousel.
-      var is_active = true;
-      $(e).mouseenter(function() {
-        is_active = false;
-      }).mouseleave(function() {
-        is_active = true;
+      // Convert seconds to miliseconds.
+      interval = Drupal.settings.ding_item_viewer.interval * 1000;
+      // Load data from server.
+      container = $(element);
+      uri = 'ding_item_viewer/' + container.attr('data-hash');
+      $('a.tab', container).live('click', function(e) {
+        // In case when user click to tab, stop sliding.
+        clearTimeout(timeOut);
+        tab_change(e, $(this));
+        // And begin again.
+        timeOut = setTimeout(slide, interval);
       });
 
-      if (autoplay != 0) {
-        // Switch tabs by timer.
-        setInterval(function() {
-          if (is_active) {
-            if (index == tabs_index) {
-              update_carousel(false, false);
-            }
-            else {
-              update_carousel(true, false);
-            }
-          }
-        }, autoplay);
+      $('div.browsebar-inner', container).live('mouseover', function() {
+        clearTimeout(timeOut);
+      });
+
+      $('div.browsebar-inner', container).live('mouseout', function() {
+        timeOut = setTimeout(slide, interval);
+      });
+
+      fetch_data();
+
+      /**
+       * Slides ding item viewer.
+       */
+      function slide() {
+        var tabs = $('li', container);
+        if (tabs.length > 1) {
+          var current = $('li.active a.tab', container);
+          var next = $(current).parent().next();
+          next = next.length > 0 ? next : $(current).parent().siblings().first();
+          tab_change(null, next.children());
+          timeOut = setTimeout(slide, interval);
+        }
+      }
+
+      function fetch_data() {
+        $.get(uri, container_callback);
       }
 
       /**
-       * Function updates carousel on tab switching.
+       * AJAX success callback function.
        *
-       * @param bool increment
-       *   Determines if we should we switch to next tab or to first.
-       * @param bool|string user_selected
-       *
+       * @see jQuery.get()
        */
-      function update_carousel(increment, user_selected) {
-        var prev_index = index;
+      function container_callback(response, textStatus, jqXHR) {
+        if (response.status === 'OK') {
+          container.html(response.data.content);
+          container.append(response.data.tabs);
+          items = response.data.items;
+          container.find('.ui-tabs-nav li:first').addClass('active');
 
-        if (user_selected) {
-          index = user_selected;
+          prepare_data();
+          show_items();
+          // Begin slide.
+          timeOut = setTimeout(slide, interval);
         }
         else {
-          index = (increment) ? index + 1 : 0;
+          container.html(response.error);
         }
-
-        $(tabs).find('li.index-' + prev_index).removeClass('active');
-        $(tabs).find('li.index-' + index).addClass('active');
-        $(e).children('div#tab-' + prev_index).hide();
-        hide_carousel(prev_index);
-        show_carousel(index);
       }
 
-      // Switch tabs on click by it.
-      $(tabs).find('li').on('click', function(event) {
-        event.preventDefault();
-        update_carousel(false, $(this).attr('tab-index'));
-      });
+      /**
+       * Prepare data before viewing it.
+       */
+      function prepare_data() {
+        var tab, i, id, ids = [];
+        // Build index => object_id mapping for quick access (DingItemViewer.tabs).
+        for (tab = 0; tab < items.length; tab++) {
+          tabs[tab] = [];
+          i = 0;
+          for (id in items[tab]) {
+            tabs[tab][i] = id;
+            i++;
+            ids.push(id);
+          }
+        }
+        // Get settings.
+        settings = Drupal.settings.ding_item_viewer;
+        var path = Drupal.settings.basePath + 'ding_availability/items/' + ids.join(',');
+        $.ajax({
+          dataType: "json",
+          url: path,
+          success: function(data) {
+            $.each(data, function(id, item) {
+              // Update cache.
+              Drupal.DADB[id] = item;
+            });
+            show_reservation_button();
+          }
+        });
+
+        // Get item container.
+        content = container.find('.browsebar-items-wrapper');
+      }
+
+      /**
+       * Show initial items.
+       */
+      function show_items() {
+        var i, item, id, index;
+
+        // Reset content.
+        content.html('');
+
+        var visible = Math.min(settings.visible_items, tabs[current_tab].length);
+        var big_item_positon = settings.big_item_positon;
+        if (visible < settings.visible_items) {
+          big_item_positon = Math.floor(visible / 2);
+        }
+
+        // Show specified number of items on screen.
+        for (i = 0; i < visible; i++) {
+          index = (i + starting_item) % tabs[current_tab].length;
+          id = tabs[current_tab][index];
+
+          // "Big" item.
+          if (i === big_item_positon) {
+            item = $(items[current_tab][id].big);
+            item.addClass('active');
+          }
+          // "Small" items.
+          else {
+            item = $(items[current_tab][id].small);
+            // Add even/odd class for proper positioning.
+            if (i % 2 === 0) {
+              item.addClass('even');
+            }
+            else {
+              item.addClass('odd');
+            }
+            // Position on screen (helper info).
+            item.data('position', i);
+
+            // Attach onclick handler.
+            item.click(item_click);
+          }
+          // Index in DingItemViewer.tabs (helper info).
+          item.data('index', index);
+          // Show item.
+          item.addClass('browsebar-item');
+
+          item.find('img').wrap("<div class='image-wrapper'></div>");
+          content.append(item);
+        }
+
+        show_reservation_button();
+
+        // Preload images for current tab.
+        for (i = 0; i < tabs[current_tab].length; i++) {
+          id = tabs[current_tab][i];
+          preload_images(items[current_tab][id]);
+        }
+
+        // Add first/last classes.
+        content.find(':first').addClass('first');
+        content.find(':last').addClass('last');
+
+        var ajax_ele = content.find('.use-ajax');
+        ajax_ele.each(function() {
+          ele = $(this);
+          new Drupal.ajax('#' + ele.attr('id'), ele, {
+            url: ele.attr('href'),
+            effect: 'fade',
+            settings: {},
+            progress: {
+              type: 'throbber'
+            },
+            event: 'click tap'
+          });
+        });
+
+      }
+
+      /**
+       * Display the reservation button for items that can be reserved.
+       */
+      function show_reservation_button() {
+        // Show reservation button.
+        var r_button = container.find('.reserve-button');
+        if (r_button.length > 0) {
+          var id = r_button.attr('id').match(/reservation-[0-9]+-[\w]+:(\w+)/);
+          if (typeof id[1] !== 'undefined' && typeof Drupal.DADB[id[1]] !== 'undefined') {
+            if (Drupal.DADB[id[1]].reservable === true) {
+              r_button.show();
+            }
+          }
+        }
+      }
+
+      /**
+       * Small item onclick event handler.
+       *
+       * Moves clicked item in "big" view and shifts all other items in "circle".
+       */
+      function item_click() {
+        var item = $(this),
+          position = item.data('position'),
+          index = item.data('index'),
+          rotation; // Shift and direction of rotation.
+
+        // Recalculate starting_item index and redraw content.
+        var visible = Math.min(settings.visible_items, tabs[current_tab].length);
+        var big_item_positon = settings.big_item_positon;
+        if (visible < settings.visible_items) {
+          big_item_positon = Math.floor(visible / 2);
+        }
+
+        rotation = position - big_item_positon;
+        starting_item = starting_item + rotation;
+        // For negative value start from the tail of list.
+        if (starting_item < 0) {
+          starting_item = tabs[current_tab].length + starting_item;
+        }
+        show_items();
+
+        return false;
+      }
+
+      /**
+       * Tab click event handler.
+       *
+       * Changes shown tab.
+       */
+      function tab_change(e, obj) {
+        if(e !== null) {
+          e.preventDefault();
+        }
+
+        starting_item = 0;
+        current_tab = $(obj).data('tab');
+        container.find('.ui-tabs-nav li').removeClass('active');
+        $(obj).parent().addClass('active');
+
+        show_items();
+      }
+
+      function preload_images(item) {
+        var $item, src, img;
+        $item = $(item.big);
+        src = $item.find('img').attr('src');
+        img = new Image();
+        img.src = src;
+
+        $item = $(item.small);
+        src = $item.find('img').attr('src');
+        img = new Image();
+        img.src = src;
+      }
     });
   });
 })(jQuery);
+
