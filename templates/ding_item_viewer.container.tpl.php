@@ -8,7 +8,7 @@
  *   $preload_image - Image tag for "loading.." spinner.
  */
 ?>
-<div class="ding-item-viewer" data-url="<?php echo $url; ?>">
+<div id="ding-item-viewer-<?php echo $hash; ?>" class="ding-item-viewer" data-hash="<?php echo $hash; ?>">
   <span class="ding-item-viewer-queries"></span>
   <div class="ding-item-viewer-preloader">
     <?php echo $preload_image; ?>

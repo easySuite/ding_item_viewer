@@ -6,6 +6,9 @@
  * Shows ting items in form of a tabbed carousel.
  */
 
+require_once 'ding_item_viewer.field.inc';
+include_once 'ding_item_viewer.features.inc';
+
 define('DING_ITEM_VIEWER_CONF_CACHE_ID', 'ding_item_viewer_conf_');
 define('DING_ITEM_VIEWER_MODULE_PATH', drupal_get_path('module', 'ding_item_viewer'));
 
@@ -362,6 +365,10 @@ function ding_item_viewer_build_data($hash) {
     foreach ($queries as $query) {
       $cid = ding_item_viewer_generate_cache_id($query['title'] . $query['query']);
       $cache = cache_get($cid, 'cache_ding_item');
+      if ($cache == false) {
+        ding_item_viewer_build_searches($queries, $cached_setting['config']);
+        ding_item_viewer_build_data($hash);
+      }
       $items = isset($cache->data) ? $cache->data : array();
       $result[] = $items;
     }
@@ -388,9 +395,6 @@ function ding_item_viewer_ajax($hash) {
 
   drupal_json_output($response);
 }
-
-require_once 'ding_item_viewer.field.inc';
-include_once 'ding_item_viewer.features.inc';
 
 /**
  * Search queries admin form.
@@ -613,7 +617,7 @@ function ding_item_viewer_content_type_edit_form_submit($form, &$form_state) {
     'ding_item_viewer_settings' => array(
       'ding_item_viewer_item_limit' => $settings_values['ding_item_viewer_item_limit'],
       'ding_item_viewer_item_sorting' => $settings_values['ding_item_viewer_item_sorting'],
-      'ding_item_viewer_cache_ttl' => $settings_values['ding_item_viewer_cache_ttl'],
+      'ding_item_viewer_cache_ttl' => $settings_values['ding_item_viewer_cache_ttl'] * 3600,
       'ding_item_viewer_interval' => $settings_values['ding_item_viewer_interval'],
       'ding_item_viewer_debug' => $settings_values['ding_item_viewer_debug'],
     ),
@@ -648,13 +652,12 @@ function ding_item_viewer_content_type_edit_form_submit($form, &$form_state) {
     return;
   }
 
-  $cache_ttl = 0;
-  if (!empty($form_state['conf']['ding_item_viewer_cache_ttl'])) {
-    $cache_ttl = $form_state['conf']['ding_item_viewer_cache_ttl'] * 3600;
-  }
+  ding_item_viewer_build_searches($searches, $form_state['conf']['ding_item_viewer_settings']);
+}
 
+function ding_item_viewer_build_searches(array $searches, array $settings) {
   foreach ($searches as $search) {
-    $sort = $settings_values['ding_item_viewer_item_sorting'];
+    $sort = $settings['ding_item_viewer_item_sorting'];
     $search_result = ding_item_viewer_search_ting($search['query'], 1, 50, $sort);
 
     $count_search_results = $search_result->numTotalCollections;
@@ -680,7 +683,7 @@ function ding_item_viewer_content_type_edit_form_submit($form, &$form_state) {
       }
 
       // Cache rendered items.
-      cache_set($cache_id, $items, 'cache_ding_item', REQUEST_TIME + $cache_ttl);
+      cache_set($cache_id, $items, 'cache_ding_item', REQUEST_TIME + $settings['ding_item_viewer_cache_ttl']);
     }
   }
 }
@@ -729,7 +732,7 @@ function ding_item_viewer_content_type_render($subtype, $conf, $panel_args, $con
   );
   drupal_add_js($js_setting, 'setting');
 
-  $block->content = theme('ding_item_viewer_container', array('url' => url('ding_item_viewer/' . $ding_item_viewer_hash)));
+  $block->content = theme('ding_item_viewer_container', array('hash' => $ding_item_viewer_hash));
 
   return $block;
 }
