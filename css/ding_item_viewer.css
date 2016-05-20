@@ -128,10 +128,11 @@
   text-transform: uppercase;
 }
 .ding-item-viewer .browsebar-item.active .subject {
+  height: 22px;
+  overflow: hidden;
   display: block;
   float: left;
   margin: 3px 3px 3px 0;
-  white-space: nowrap;
 }
 .ding-item-viewer .browsebar-item.active .subjects {
   max-height: 55px;
@@ -209,8 +210,4 @@
   overflow: hidden;
   font-size: 80%;
   margin-top: 10px;
-}
-
-.ding-item-viewer-queries {
-  display: none;
 }

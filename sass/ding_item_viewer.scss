@@ -176,10 +176,11 @@ $base-font-weight-bold:           600;
       
       // Subject
       .subject {
+        height: 22px;
+        overflow: hidden;
         display: block;
         float: left;
         margin: 3px 3px 3px 0;
-        white-space: nowrap;
       }
 
       .subjects {
