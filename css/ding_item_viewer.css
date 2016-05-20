@@ -31,6 +31,9 @@
 .ding-item-viewer .browsebar-items-wrapper {
   width: 942px;
 }
+.ding-item-viewer .browsebar-items-wrapper .more-info-wrapper {
+  clear: both;
+}
 .ding-item-viewer .cover-wrapper {
   float: left;
   width: 160px;
