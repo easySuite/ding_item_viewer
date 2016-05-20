@@ -53,6 +53,10 @@ $base-font-weight-bold:           600;
 
   .browsebar-items-wrapper {
     width: 942px;
+
+    .more-info-wrapper {
+      clear: both;
+    }
   }
   
   .cover-wrapper {
