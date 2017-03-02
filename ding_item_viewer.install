@@ -52,21 +52,21 @@ function ding_item_viewer_install() {
   $instance = field_info_instance('ting_object', 'ting_cover', 'ting_object');
   $instance['display']['ding_item_viewer_big'] = array(
     'label' => 'hidden',
-    'type' => 'ting_cover_ding_item_viewer',
+    'type' => 'ting_cover_default',
     'weight' => '0',
     'settings' => array(
       'image_style' => 'ding_item_viewer_image_big',
     ),
-    'module' => 'ding_item_viewer',
+    'module' => 'ting_covers',
   );
   $instance['display']['ding_item_viewer_small'] = array(
     'label' => 'hidden',
-    'type' => 'ting_cover_ding_item_viewer',
+    'type' => 'ting_cover_default',
     'weight' => '0',
     'settings' => array(
       'image_style' => 'ding_item_viewer_image_small',
     ),
-    'module' => 'ding_item_viewer',
+    'module' => 'ting_covers',
   );
   field_update_instance($instance);
 
