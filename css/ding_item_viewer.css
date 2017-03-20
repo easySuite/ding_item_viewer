@@ -86,6 +86,7 @@
   overflow: hidden;
   width: 120px;
   max-height: 193px;
+  z-index: inherit;
 }
 .ding-item-viewer .browsebar-item.active {
   max-height: 410px;
