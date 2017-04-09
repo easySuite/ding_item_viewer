@@ -186,14 +186,27 @@ function ding_item_viewer_block_view($delta) {
  *   Set of results, keyed by id with boolean values.
  */
 function ding_item_viewer_check_covers(array $ids) {
-  module_load_include('module', 'ting_covers');
+  module_load_include('inc', 'ting_covers', 'ting_covers.pages');
+
+  $cover_data = array();
+  array_walk($ids, function($v) use (&$cover_data) {
+    $local_id = explode(':', $v);
+
+    $cover_data[$local_id[1]] = array(
+      'local_id' => $local_id[1],
+      'owner_id' => $local_id[0],
+    );
+  });
 
   $covers = ting_covers_get($ids);
 
   $result = array();
-  foreach ($covers as $faust => $cover) {
-    $result[$faust] = TRUE;
-  }
+  array_walk($cover_data, function($v) use (&$result, $covers) {
+    $faust_number = $v['owner_id'] . ':' . $v['local_id'];
+    if (!empty($covers[$faust_number])) {
+      $result[$faust_number] = TRUE;
+    }
+  });
 
   return $result;
 }
@@ -275,7 +288,6 @@ function ding_item_viewer_entity_info_alter(&$entity_info) {
     ),
   );
 }
-
 
 /**
  * Assembles item viewer data.
@@ -660,9 +672,10 @@ function ding_item_viewer_build_searches(array $searches, array $settings) {
       $items = array();
       foreach ($objects as $item) {
         $build = ting_object_view($item, 'ding_item_viewer_big');
-        $big = drupal_render($build);
+        $big = render($build);
+
         $build = ting_object_view($item, 'ding_item_viewer_small');
-        $small = drupal_render($build);
+        $small = render($build);
 
         $items[$item->localId] = array(
           'small' => $small,
@@ -677,50 +690,14 @@ function ding_item_viewer_build_searches(array $searches, array $settings) {
 }
 
 /**
- * Return the pane contents.
+ * Implements hook_more_info_support().
  */
-function ding_item_viewer_content_type_render($subtype, $conf, $panel_args, $context) {
-  $searches = $conf['searches'];
-  unset($conf['searches']);
-
-  $hash_string = '';
-  foreach ($searches as $search) {
-    $hash_string .= trim($search['query']);
-  }
-  $ding_item_viewer_hash = md5($hash_string);
-
-  $ding_item_viewer_conf = array(
-    $ding_item_viewer_hash => array(
-      'hash' => $ding_item_viewer_hash,
-      'searches' => $searches,
-      'config' => $conf['ding_item_viewer_settings'],
-    ),
-  );
-
-  $cache_id = DING_ITEM_VIEWER_CONF_CACHE_ID . $ding_item_viewer_hash;
-  cache_set($cache_id, $ding_item_viewer_conf, 'cache');
-
-  $block = new stdClass();
-
-  // Load required JS and CSS files.
-  drupal_add_library('system', 'drupal.ajax');
-  drupal_add_css(DING_ITEM_VIEWER_MODULE_PATH . '/css/ding_item_viewer.css');
-  drupal_add_js(DING_ITEM_VIEWER_MODULE_PATH . '/js/ding_item_viewer.js');
-
-  if (module_exists('ding_availability')) {
-    drupal_add_js(drupal_get_path('module', 'ding_availability') . '/js/ding_availability.js');
-  }
-
-  $js_setting = array(
+function ding_item_viewer_more_info_support() {
+  return array(
     'ding_item_viewer' => array(
-      'visible_items' => 6,
-      'big_item_positon' => 3,
-      'interval' => $conf['ding_item_viewer_settings']['ding_item_viewer_interval'],
+      'display' => 'default',
+      'label' => 'Ding Items Viewer',
+      'weight' => '1',
     ),
   );
-  drupal_add_js($js_setting, 'setting');
-
-  $block->content = theme('ding_item_viewer_container', array('hash' => $ding_item_viewer_hash));
-
-  return $block;
 }
