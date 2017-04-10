@@ -119,6 +119,7 @@
         // Reset content.
         content.html('');
 
+        current_tab = (current_tab !== undefined) ? current_tab : 0;
         var visible = Math.min(settings.visible_items, tabs[current_tab].length);
         var big_item_positon = settings.big_item_positon;
         if (visible < settings.visible_items) {
