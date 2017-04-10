@@ -695,9 +695,9 @@ function ding_item_viewer_build_searches(array $searches, array $settings) {
 function ding_item_viewer_more_info_support() {
   return array(
     'ding_item_viewer' => array(
-      'display' => 'default',
-      'label' => 'Ding Items Viewer',
-      'weight' => '1',
+      'display' => 'ding_item_viewer_big',
+      'label' => 'hidden',
+      'weight' => '6',
     ),
   );
 }
