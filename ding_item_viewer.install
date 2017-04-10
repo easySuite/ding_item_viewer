@@ -4,11 +4,9 @@
  */
 
 /**
- * Implements hook_install().
+ * Implements hook_enable().
  */
-function ding_item_viewer_install() {
-  module_enable(array('ding_more_info'));
-
+function ding_item_viewer_enable() {
   // Create field group.
   $group = (object) array(
     'identifier' => 'group_data|ting_object|ting_object|ding_item_viewer_big',
