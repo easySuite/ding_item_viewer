@@ -111,6 +111,15 @@
   float: left;
   width: 200px;
 }
+.ding-item-viewer .browsebar-item.active .ting-cover {
+  width: 150px;
+  min-height: 0;
+}
+.ding-item-viewer .browsebar-item.active .ting-cover:before {
+  left: 50px;
+  position: absolute;
+  top: 35px;
+}
 .ding-item-viewer .browsebar-item.active .field-type-ting-cover {
   float: left;
   margin-right: 10px;
@@ -132,7 +141,7 @@
   text-transform: uppercase;
 }
 .ding-item-viewer .browsebar-item.active .subject {
-  height: 22px;
+  height: auto;
   overflow: hidden;
   display: block;
   float: left;
