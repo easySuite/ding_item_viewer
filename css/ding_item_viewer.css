@@ -31,6 +31,9 @@
 .ding-item-viewer .browsebar-items-wrapper {
   width: 942px;
 }
+.ding-item-viewer .browsebar-items-wrapper .more-info-wrapper {
+  clear: both;
+}
 .ding-item-viewer .cover-wrapper {
   float: left;
   width: 160px;
@@ -83,6 +86,7 @@
   overflow: hidden;
   width: 120px;
   max-height: 193px;
+  z-index: inherit;
 }
 .ding-item-viewer .browsebar-item.active {
   max-height: 410px;
@@ -107,6 +111,15 @@
   float: left;
   width: 200px;
 }
+.ding-item-viewer .browsebar-item.active .ting-cover {
+  width: 150px;
+  min-height: 0;
+}
+.ding-item-viewer .browsebar-item.active .ting-cover:before {
+  left: 50px;
+  position: absolute;
+  top: 35px;
+}
 .ding-item-viewer .browsebar-item.active .field-type-ting-cover {
   float: left;
   margin-right: 10px;
@@ -128,10 +141,11 @@
   text-transform: uppercase;
 }
 .ding-item-viewer .browsebar-item.active .subject {
+  height: auto;
+  overflow: hidden;
   display: block;
   float: left;
   margin: 3px 3px 3px 0;
-  white-space: nowrap;
 }
 .ding-item-viewer .browsebar-item.active .subjects {
   max-height: 55px;
