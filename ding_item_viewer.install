@@ -165,6 +165,34 @@ function ding_item_viewer_uninstall() {
     $group_object  = field_group_load_field_group($group, 'ting_object', 'ting_object', 'ding_item_viewer_big');
     field_group_group_export_delete($group_object);
   }
+
+  // Remove ding_item_viewer displays from field_config_instance.
+  $fields = array(
+    'ting_cover',
+    'ting_title',
+    'ting_author',
+    'ting_abstract',
+    'ting_subjects',
+    'ding_entity_buttons',
+  );
+
+  foreach ($fields as $field) {
+    $instance = field_info_instance('ting_object', $field, 'ting_object');
+    if (isset($instance['display']['ding_item_viewer_big'])) {
+      unset($instance['display']['ding_item_viewer_big']);
+    }
+    if (isset($instance['display']['ding_item_viewer_small'])) {
+      unset($instance['display']['ding_item_viewer_small']);
+    }
+
+    field_update_instance($instance);
+  }
+
+  // Removing panel panes created.
+  db_delete('panels_pane')
+    ->condition('type', 'ding_item_viewer')
+    ->condition('subtype', 'ding_item_viewer')
+    ->execute();
 }
 
 /**
