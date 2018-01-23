@@ -235,7 +235,7 @@ msgid "Display ting objects in a carousel view"
 msgstr ""
 
 #: ding_item_viewer.info:0
-msgid "easyDDB"
+msgid "easyOPAC"
 msgstr ""
 
 #: templates/ding_item_viewer.item_active.tpl.php:34
